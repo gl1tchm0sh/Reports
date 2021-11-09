@@ -2,6 +2,8 @@ from totales_x_vdr import main_process as totales
 from objetivos_x_rubro import main_process as objetivos
 from Desarrollo import main_process as desarrollo
 from totales_x_vdr_soloA import main_process as solo_a
+from nc_totales_x_vdr import main_process as creditos
+from nc_totales_x_vdr_soloA import main_process as creditosA
 
 
 def merge():
@@ -10,15 +12,17 @@ def merge():
     oxr = objetivos()
     des = desarrollo()
     txva = solo_a()
+    ncxv = creditos()
+    ncxva = creditosA()
     merge = {} # Los resultados se almacenan en esta variable
 
     # Listas para definir los rubros que entran en sus respectivos objetivos
     bosch_lst = [164, 165, 166, 167]
     tyrolit_list = [275, 280]
 
-    for vdr in txv:
-        merge[vdr] = {'Total':txv[vdr]}
-        merge[vdr]['TotalA'] = txva[vdr]
+    for vdr in txv:   
+        merge[vdr] = {'Total':(txv[vdr] - ncxv[vdr])}
+        merge[vdr]['TotalA'] = (txva[vdr] - ncxva[vdr])
         if vdr in oxr:
             merge[vdr] = merge[vdr] | oxr[vdr]
         if vdr in des:
